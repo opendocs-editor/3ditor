@@ -1,6 +1,7 @@
 import React from "react";
-import { faBold, faItalic, faUnderline, faListUl, faListOl, faLink, faAlignLeft, faAlignRight, faAlignCenter, faAlignJustify, faImage } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FiLink2 } from 'react-icons/fi';
+import { AiOutlineUnorderedList, AiOutlineOrderedList, AiOutlineAlignLeft, AiOutlineAlignCenter, AiOutlineAlignRight, AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
+import { BsJustify, BsImage, BsCodeSlash, BsTypeBold, BsTypeItalic, BsTypeUnderline } from 'react-icons/bs';
 import "./App.css";
 
 function App() {
@@ -8,7 +9,7 @@ function App() {
   window.addEventListener("load", () => {
     if(hasInitialized) return;
     window.addEventListener("keydown", (e) => {
-      if(e.ctrlKey) {
+      if(e.ctrlKey && !e.shiftKey && !e.altKey) {
         switch(e.keyCode) {
           case 66:
             document.execCommand("bold", false);
@@ -23,7 +24,7 @@ function App() {
             break;
         }
       }
-      if(e.ctrlKey && e.shiftKey) {
+      if(e.ctrlKey && e.shiftKey && !e.shiftKey) {
         switch(e.keyCode) {
           case 56:
             document.execCommand("insertUnorderedList", false);
@@ -34,6 +35,28 @@ function App() {
           default:
             break;
         }
+      }
+      if(e.ctrlKey && !e.shiftKey && e.altKey) {
+        switch(e.keyCode) {
+          case 189:
+            e.preventDefault();
+            document.execCommand("decreaseFontSize", false);
+            break;
+          case 187:
+            e.preventDefault();
+            document.execCommand("increaseFontSize", false);
+            break;
+          default:
+            break;
+        }
+      }
+      switch(e.keyCode) {
+        case 9:
+          e.preventDefault();
+          document.execCommand("indent", false);
+          break;
+        default:
+          break;
       }
     });
     setHasInitialized(true);
@@ -46,65 +69,87 @@ function App() {
           <button type="button" className="_3ditor-button" data-action="bold" onClick={() => {
             document.execCommand("bold", false);
           }}>
-            <FontAwesomeIcon size="2x" icon={faBold} />
+            <BsTypeBold size="20px" />
           </button>
           <button type="button" className="_3ditor-button" data-action="italic" onClick={() => {
             document.execCommand("italic", false);
           }}>
-            <FontAwesomeIcon size="2x" icon={faItalic} />
+            <BsTypeItalic size="20px" />
           </button>
           <button type="button" className="_3ditor-button" data-action="underline" onClick={() => {
             document.execCommand("underline", false);
           }}>
-            <FontAwesomeIcon size="2x" icon={faUnderline} />
+            <BsTypeUnderline size="20px" />
           </button>
+          <span className="_3ditor-header-divider" />
           <button type="button" className="_3ditor-button" data-action="insertUnorderedList" onClick={() => {
             document.execCommand("insertUnorderedList", false);
           }}>
-            <FontAwesomeIcon size="2x" icon={faListUl} />
+            <AiOutlineUnorderedList />
           </button>
           <button type="button" className="_3ditor-button" data-action="insertOrderedList" onClick={() => {
             document.execCommand("insertOrderedList", false);
           }}>
-            <FontAwesomeIcon size="2x" icon={faListOl} />
+            <AiOutlineOrderedList />
           </button>
+          <span className="_3ditor-header-divider" />
           <button type="button" className="_3ditor-button" data-action="createLink" onClick={() => {
             let linkLocation = prompt("Please enter the link's target.", "https://www.example.com/");
-            if(!linkLocation) return;
-            document.execCommand("createLink", false, linkLocation);
+            if(linkLocation) document.execCommand("createLink", false, linkLocation);
+            if(!linkLocation) document.getElementsByClassName("_3ditor-content")[0].innerHTML += "<div></div>";
           }}>
-            <FontAwesomeIcon size="2x" icon={faLink} />
+            <FiLink2 />
           </button>
+          <span className="_3ditor-header-divider" />
           <button type="button" className="_3ditor-button" data-action="justifyLeft" onClick={() => {
             document.execCommand("justifyLeft", false);
           }}>
-            <FontAwesomeIcon size="2x" icon={faAlignLeft} />
+            <AiOutlineAlignLeft />
           </button>
           <button type="button" className="_3ditor-button" data-action="justifyCenter" onClick={() => {
             document.execCommand("justifyCenter", false);
           }}>
-            <FontAwesomeIcon size="2x" icon={faAlignCenter} />
+            <AiOutlineAlignCenter />
           </button>
           <button type="button" className="_3ditor-button" data-action="justifyRight" onClick={() => {
             document.execCommand("justifyRight", false);
           }}>
-            <FontAwesomeIcon size="2x" icon={faAlignRight} />
+            <AiOutlineAlignRight />
           </button>
           <button type="button" className="_3ditor-button" data-action="justifyFull" onClick={() => {
             document.execCommand("justifyFull", false);
           }}>
-            <FontAwesomeIcon size="2x" icon={faAlignJustify} />
+            <BsJustify />
+          </button>
+          <span className="_3ditor-header-divider" />
+          <button type="button" className="_3ditor-button" data-action="increaseFontSize" onClick={() => {
+            document.execCommand("increaseFontSize", false);
+          }}>
+            <AiOutlinePlus />
+          </button>
+          <button type="button" className="_3ditor-button" data-action="decreaseFontSize" onClick={() => {
+            document.execCommand("decreaseFontSize", false);
+          }}>
+            <AiOutlineMinus />
+          </button>
+          <span className="_3ditor-header-divider" />
+          <button type="button" className="_3ditor-button" data-action="none" onClick={() => {
+            let content = prompt("Please enter the custom code to insert.", "<div>Hello, world!</div>");
+            if(content) document.getElementsByClassName("_3ditor-content")[0].innerHTML += content;
+            if(!content) document.getElementsByClassName("_3ditor-content")[0].innerHTML += "<div></div>";
+          }}>
+            <BsCodeSlash />
           </button>
           <button type="button" className="_3ditor-button" data-action="insertImage" onClick={() => {
             let imageLocation = prompt("Please enter the image's URL.", "https://www.example.com/example.png");
-            if(!imageLocation) return;
-            document.execCommand("insertImage", false, imageLocation);
+            if(imageLocation) document.execCommand("insertImage", false, imageLocation);
+            if(!imageLocation) document.getElementsByClassName("_3ditor-content")[0].innerHTML += "<div></div>";
           }}>
-            <FontAwesomeIcon size="2x" icon={faImage} />
+            <BsImage />
           </button>
         </div>
-        <div className="_3ditor-content" contentEditable={true}>
-
+        <div className="_3ditor-content-container">
+          <div className="_3ditor-content" contentEditable={true}></div>
         </div>
       </div>
     </div>
