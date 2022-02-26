@@ -10,16 +10,18 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 17.x
+      - name: Set outputs
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - name: Install dependencies, build, and archive.
         run: |
           yarn install
           yarn build
           sudo apt-get update
           sudo apt-get -y install zip unzip
-          zip -r dist.zip dist
-      - name: Set outputs
-        id: vars
-        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+          zip -r dist-${GITHUB_SHORT_SHA}.zip dist
+        env:
+          GITHUB_SHORT_SHA: ${{ steps.vars.outputs.sha_short }}
       - name: Create tag
         uses: rickstaa/action-create-tag@v1
         with:
@@ -30,5 +32,5 @@ jobs:
           tag_name: ${{ steps.vars.outputs.sha_short }}
           name: ${{ steps.vars.outputs.sha_short }}
           prerelease: true
-          files: dist.zip
+          files: dist-${{ steps.vars.outputs.sha_short }}.zip
           body: "This is an automated release."
