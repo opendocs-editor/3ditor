@@ -17,14 +17,18 @@ jobs:
           sudo apt-get update
           sudo apt-get -y install zip unzip
           zip -r dist.zip dist
+      - name: Set outputs
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - name: Create tag
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: ${{ github.sha }}
+          tag: ${{ steps.vars.outputs.sha_short }}
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.sha }}
+          tag_name: ${{ steps.vars.outputs.sha_short }}
+          name: ${{ steps.vars.outputs.sha_short }}
           prerelease: true
           files: dist.zip
           body: "This is an automated release."
