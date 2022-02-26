@@ -17,9 +17,14 @@ jobs:
           sudo apt-get update
           sudo apt-get -y install zip unzip
           zip -r dist.zip dist
+      - name: Create tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: ${{ github.sha }}
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ github.sha }}
           prerelease: true
           files: dist.zip
           body: "This is an automated release."
