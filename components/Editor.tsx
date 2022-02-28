@@ -1,4 +1,5 @@
 import React from "react";
+import FontsAPI from "opendocs-fonts-api";
 import { FiLink2 } from "react-icons/fi";
 import {
     AiOutlineUnorderedList,
@@ -19,6 +20,7 @@ import {
 } from "react-icons/bs";
 
 import styles from "../styles/3ditor.module.css";
+import Error from "next/error";
 
 class Selection {
     readonly anchorNode: Node | null | undefined;
@@ -45,7 +47,15 @@ class Selection {
     toString() { return ""; }
 }
 
-const Editor = (): JSX.Element => {
+const Editor = ({ fonts }: { fonts: FontsAPI.FontsAPIObject }): JSX.Element => {
+    if(!fonts || !fonts.items) {
+        return (
+            <>
+                <Error statusCode={500} title="No fonts provided" />
+            </>
+        );
+    }
+    
     const [hasInitialized, setHasInitialized] = React.useState(false);
     const [selection_, setSelection_] = React.useState(new Selection());
     React.useEffect(() => {
@@ -318,6 +328,11 @@ const Editor = (): JSX.Element => {
                 <select id="_3ditor_font" className={styles._3ditor_font}>
                     <option value="Arial" style={{ fontFamily: "arial" }}>Arial</option>
                     <option value="Helvetica" style={{ fontFamily: "helvetica" }}>Helvetica</option>
+                    { fonts.items.map((f) => {
+                        return (
+                            <option value={f.family} style={{ fontFamily: f.family }} key={f.family}>{f.family}</option>
+                        );
+                    }) }
                 </select>
                 <span className={styles._3ditor_header_divider} />
                 <button
