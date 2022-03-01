@@ -1,5 +1,6 @@
 import React from "react";
 import FontsAPI from "opendocs-fonts-api";
+import * as uuid from "uuid";
 import { FiLink2 } from "react-icons/fi";
 import {
     AiOutlineUnorderedList,
@@ -258,7 +259,9 @@ const Editor = ({ fonts }: { fonts: FontsAPI.FontsAPIObject }): JSX.Element => {
                     type="button"
                     className={styles._3ditor_size_control}
                     data-action="decreaseFontSize"
-                    onClick={() => {
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         const selection = document.getSelection();
                         if(!selection || !selection.anchorNode?.parentElement) return;
                         const sizeFull = getComputedStyle(selection.anchorNode?.parentElement, null).getPropertyValue("font-size");
@@ -269,13 +272,19 @@ const Editor = ({ fonts }: { fonts: FontsAPI.FontsAPIObject }): JSX.Element => {
                         const size = parseInt((parseFloat(matched[1]) - 1).toFixed(0));
                         if(Math.sign(size) == -1) return;
                         const unit = matched[2];
-                        const html = `<span style="font-size: ${size + unit};">${document.getSelection() ? document.getSelection()?.toString() : ""}</span>`;
+                        const i_uuid = uuid.v4();
+                        const html = `<span style="font-size: ${size + unit};" id="${i_uuid}">${document.getSelection() ? document.getSelection()?.toString() : ""}</span>`;
                         document.execCommand("insertHTML", false, html);
+                        const i_el = document.getElementById(i_uuid);
+                        if(!i_el) return;
+                        document.getSelection()?.selectAllChildren(i_el);
                     }}
                 >
                     <AiOutlineMinus />
                 </button>
                 <input type="number" name="fontSize" id="fontSize" defaultValue="11" className={styles._3ditor_size_input} onKeyUp={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     if(e.keyCode != 13) return;
                     const selection = selection_;
                     // /(\d*\.?\d*)(.+)/gms
@@ -287,7 +296,9 @@ const Editor = ({ fonts }: { fonts: FontsAPI.FontsAPIObject }): JSX.Element => {
                     const unit = "px";
                     const html = `<span style="font-size: ${size + unit};">${selection ? selection.toString() : ""}</span>`;
                     document.execCommand("insertHTML", false, html);
-                }} onChange={() => {
+                }} onChange={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     const selection = selection_;
                     // /(\d*\.?\d*)(.+)/gms
                     const fontSize = document.getElementById("fontSize") as HTMLInputElement;
@@ -298,34 +309,52 @@ const Editor = ({ fonts }: { fonts: FontsAPI.FontsAPIObject }): JSX.Element => {
                     const unit = "px";
                     const html = `<span style="font-size: ${size + unit};">${selection ? selection.toString() : ""}</span>`;
                     document.execCommand("insertHTML", false, html);
-                }} onFocus={() => {
+                }} onFocus={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     const sel = document.getSelection();
                     if(!sel || sel.toString() == "" || sel.toString() == " ") return;
                     setSelection_(sel);
+                }} onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                 }} />
                 <button
                     type="button"
                     className={styles._3ditor_size_control_last}
                     data-action="increaseFontSize"
-                    onClick={() => {
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         const selection = document.getSelection();
                         if(!selection || !selection.anchorNode?.parentElement) return;
                         const sizeFull = getComputedStyle(selection.anchorNode?.parentElement, null).getPropertyValue("font-size");
-                        // /(\d*\.?\d*)(.+)/gms
                         const regex = new RegExp("(\\d*\\.?\\d*)(.+)", "gms");
                         const matched = regex.exec(sizeFull);
                         if(!matched) return;
                         const size = parseInt((parseFloat(matched[1]) + 1).toFixed(0));
                         if(Math.sign(size) == -1) return;
                         const unit = matched[2];
-                        const html = `<span style="font-size: ${size + unit};">${document.getSelection() ? document.getSelection()?.toString() : ""}</span>`;
+                        const i_uuid = uuid.v4();
+                        const html = `<span style="font-size: ${size + unit};" id="${i_uuid}">${document.getSelection() ? document.getSelection()?.toString() : ""}</span>`;
+                        console.log(html);
                         document.execCommand("insertHTML", false, html);
+                        const i_el = document.getElementById(i_uuid);
+                        if(!i_el) return;
+                        document.getSelection()?.selectAllChildren(i_el);
                     }}
                 >
                     <AiOutlinePlus />
                 </button>
                 <span className={styles._3ditor_header_divider} />
-                <select id="_3ditor_font" className={styles._3ditor_font}>
+                <select id="_3ditor_font" className={styles._3ditor_font} onChange={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const sel = document.getElementById("_3ditor_font") as HTMLSelectElement;
+                    if(!sel) return;
+                    const font = sel.value;
+                    document.execCommand("fontName", false, font);
+                }}>
                     <option value="Arial" style={{ fontFamily: "arial" }}>Arial</option>
                     <option value="Helvetica" style={{ fontFamily: "helvetica" }}>Helvetica</option>
                     { fonts.items.map((f) => {
