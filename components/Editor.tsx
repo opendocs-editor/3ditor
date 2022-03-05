@@ -89,7 +89,7 @@ class Editor extends React.Component {
                     id: "_3ditor_tinymce",
                     images_upload_url:
                         "https://docs.nosadnile.net/api/v1/editor/image/upload",
-                    content_style: "@import url('/fonts/opendyslexic.css');",
+                    content_style: "@import url('/3ditor/fonts/opendyslexic.css');",
                     setup: (editor) => {
                         const s = new SpeechSynthesisUtterance("Prep");
                         s.voice = speechSynthesis.getVoices()[4];
