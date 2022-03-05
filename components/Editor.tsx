@@ -1,423 +1,188 @@
 import React from "react";
-import FontsAPI from "opendocs-fonts-api";
-import * as uuid from "uuid";
-import { FiLink2 } from "react-icons/fi";
-import {
-    AiOutlineUnorderedList,
-    AiOutlineOrderedList,
-    AiOutlineAlignLeft,
-    AiOutlineAlignCenter,
-    AiOutlineAlignRight,
-    AiOutlinePlus,
-    AiOutlineMinus,
-} from "react-icons/ai";
-import {
-    BsJustify,
-    BsImage,
-    BsCodeSlash,
-    BsTypeBold,
-    BsTypeItalic,
-    BsTypeUnderline,
-} from "react-icons/bs";
+import * as TinyMCE from "@tinymce/tinymce-react";
+import * as tts from "google-tts-api";
+import axios from "axios";
 
-import styles from "../styles/3ditor.module.css";
-import Error from "next/error";
-
-class Selection {
-    readonly anchorNode: Node | null | undefined;
-    readonly anchorOffset: number | undefined;
-    readonly focusNode: Node | null | undefined;
-    readonly focusOffset: number | undefined;
-    readonly isCollapsed: boolean | undefined;
-    readonly rangeCount: number | undefined;
-    readonly type: string | undefined;
-    addRange(range: Range) {}
-    collapse(node: Node | null, offset?: number) {}
-    collapseToEnd() {}
-    collapseToStart() {}
-    containsNode(node: Node, allowPartialContainment?: boolean) { return false; }
-    deleteFromDocument() {}
-    empty() {}
-    extend(node: Node, offset?: number) {}
-    getRangeAt(index: number) { new Range(); }
-    removeAllRanges() {}
-    removeRange(range: Range) {}
-    selectAllChildren(node: Node) {}
-    setBaseAndExtent(anchorNode: Node, anchorOffset: number, focusNode: Node, focusOffset: number) {}
-    setPosition(node: Node | null, offset?: number) {}
-    toString() { return ""; }
+interface HandleEditorChangeResult {
+    target: {
+        getContent: () => any;
+    };
 }
 
-const Editor = ({ fonts }: { fonts: FontsAPI.FontsAPIObject }): JSX.Element => {
-    if(!fonts || !fonts.items) {
+type EditorState = {
+    playing: boolean;
+};
+
+class Editor extends React.Component {
+    handleEditorChange = (e: HandleEditorChangeResult) => {
+        console.log(`Content was updated: `, e.target.getContent());
+    };
+
+    state: EditorState = {
+        playing: false,
+    };
+
+    render() {
         return (
-            <>
-                <Error statusCode={500} title="No fonts provided" />
-            </>
+            <TinyMCE.Editor
+                initialValue=""
+                init={{
+                    height: "100vh",
+                    menu: {
+                        tts: {
+                            title: "TTS",
+                            items: "activatetts",
+                        },
+                        file: {
+                            title: "File",
+                            items: "newdocument restoredraft | preview | print ",
+                        },
+                        edit: {
+                            title: "Edit",
+                            items: "undo redo | cut copy paste pastetext | selectall | searchreplace",
+                        },
+                        view: {
+                            title: "View",
+                            items: "code | visualaid visualchars visualblocks | spellchecker | preview fullscreen",
+                        },
+                        insert: {
+                            title: "Insert",
+                            items: "image link media template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor toc | insertdatetime",
+                        },
+                        format: {
+                            title: "Format",
+                            items: "bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align lineheight | forecolor backcolor | removeformat",
+                        },
+                        tools: {
+                            title: "Tools",
+                            items: "spellchecker spellcheckerlanguage | code wordcount",
+                        },
+                        table: {
+                            title: "Table",
+                            items: "inserttable | cell row column | tableprops deletetable",
+                        },
+                        help: { title: "Help", items: "help" },
+                    },
+                    menubar:
+                        "file edit view insert format tools tts table help",
+                    plugins: [
+                        "print preview paste importcss searchreplace autolink autosave save directionality code",
+                        "visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak",
+                        "nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help",
+                        "charmap quickbars emoticons opendocs-editor",
+                    ],
+                    toolbar:
+                        "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect \
+                    | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor \
+                    backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile \
+                    image media template link anchor codesample | ltr rtl rtc",
+                    font_formats:
+                        "Andale Mono=andale mono,times;\
+                    Arial=arial,helvetica,sans-serif; Arial Black=arial black,avant garde; \
+                    Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; \
+                    Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; \
+                    Impact=impact,chicago; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; \
+                    Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; \
+                    Webdings=webdings; Wingdings=wingdings,zapf dingbats; OpenDyslexic 2=OpenDyslexic Two; \
+                    OpenDyslexic 3=OpenDyslexic Three; OpenDyslexic Alta=OpenDyslexic Alta; OpenDyslexic Mono=OpenDyslexic Mono;",
+                    branding: false,
+                    id: "_3ditor_tinymce",
+                    images_upload_url:
+                        "https://docs.nosadnile.net/api/v1/editor/image/upload",
+                    content_style: "@import url('/fonts/opendyslexic.css');",
+                    setup: (editor) => {
+                        const s = new SpeechSynthesisUtterance("Prep");
+                        s.voice = speechSynthesis.getVoices()[4];
+                        s.lang = "en";
+                        s.rate = 1;
+                        s.volume = 0;
+                        speechSynthesis.speak(s);
+                        speechSynthesis.cancel();
+                        // Initialize headings sidebar
+                        editor.ui.registry.addSidebar("headings-sidebar", {
+                            tooltip: "Headings in the document.",
+                            icon: "list-num-lower-roman",
+                            onSetup: (api) => {
+                                console.log("Render panel", api.element());
+                                return () => {};
+                            },
+                            onShow: (api) => {
+                                console.log("Show panel", api.element());
+                                api.element().innerHTML = "Hello world!";
+                                return () => {};
+                            },
+                            onHide: (api) => {
+                                console.log("Hide panel", api.element());
+                                return () => {};
+                            },
+                        });
+                        // Headings sidebar button
+                        editor.ui.registry.addMenuItem("headings", {
+                            text: "Headings",
+                            icon: "list-num-lower-roman",
+                            onAction: () => {
+                                editor.execCommand(
+                                    "togglesidebar",
+                                    false,
+                                    "headers"
+                                );
+                            },
+                        });
+                        // Initialize TTS
+                        editor.ui.registry.addMenuItem("activatetts", {
+                            text: "Text to Speech",
+                            onAction: async () => {
+                                if (this.state.playing) {
+                                    if (speechSynthesis.speaking)
+                                        speechSynthesis.cancel();
+                                    this.state.playing = false;
+                                    return;
+                                }
+                                this.state.playing = true;
+                                const content = editor.getContent({
+                                    format: "text",
+                                });
+                                const splitted = content.split(".");
+                                for (let i = 0; i < splitted.length; i++) {
+                                    if (!this.state.playing) break;
+                                    const word = splitted[i];
+                                    editor.setContent(
+                                        editor
+                                            .getContent()
+                                            .replace(
+                                                word,
+                                                `<span class="speaking">${word}</span>`
+                                            )
+                                    );
+                                    await new Promise((r) => {
+                                        const s = new SpeechSynthesisUtterance(
+                                            word
+                                        );
+                                        s.voice =
+                                            speechSynthesis.getVoices()[4];
+                                        s.lang = "en";
+                                        s.rate = 1;
+                                        s.addEventListener("end", (e) => r(e));
+                                        speechSynthesis.speak(s);
+                                    });
+                                    editor.setContent(
+                                        editor
+                                            .getContent()
+                                            .replace(
+                                                `<span class="speaking">${word}</span>`,
+                                                word
+                                            )
+                                    );
+                                }
+                                this.state.playing = false;
+                            },
+                        });
+                    },
+                }}
+                tinymceScriptSrc={`/tinymce/js/tinymce/tinymce.min.js`}
+            />
         );
     }
-    
-    const [hasInitialized, setHasInitialized] = React.useState(false);
-    const [selection_, setSelection_] = React.useState(new Selection());
-    React.useEffect(() => {
-        window.addEventListener("load", () => {
-            if (hasInitialized) return;
-            const container = document.getElementById("_3ditor_content") as HTMLDivElement;
-            if(container) {
-                document.addEventListener("selectionchange", () => {
-                    const selection = document.getSelection();
-                    if(!selection || !selection.anchorNode?.parentElement) return;
-                    if(!container.contains(selection.anchorNode?.parentElement)) return;
-                    const sizeFull = getComputedStyle(selection.anchorNode?.parentElement, null).getPropertyValue("font-size");
-                    // /(\d*\.?\d*)(.+)/gms
-                    const regex = new RegExp("(\\d*\\.?\\d*)(.+)", "gms");
-                    const matched = regex.exec(sizeFull);
-                    if(!matched) return;
-                    const size = parseInt((parseFloat(matched[1]) - 1).toFixed(0));
-                    if(Math.sign(size) == -1) return;
-                    const fontSize = document.getElementById("fontSize") as HTMLInputElement;
-                    if(!fontSize) return;
-                    fontSize.value = "" + size;
-                });
-            }
-            document.addEventListener("keydown", (e) => {
-                if (e.ctrlKey && !e.shiftKey && !e.altKey) {
-                    switch (e.keyCode) {
-                        case 66:
-                            document.execCommand("bold", false);
-                            break;
-                        case 73:
-                            document.execCommand("italic", false);
-                            break;
-                        case 85:
-                            document.execCommand("underline", false);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                if (e.ctrlKey && e.shiftKey && !e.shiftKey) {
-                    switch (e.keyCode) {
-                        case 56:
-                            document.execCommand("insertUnorderedList", false);
-                            break;
-                        case 55:
-                            document.execCommand("insertOrderedList", false);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                if (e.ctrlKey && !e.shiftKey && e.altKey) {
-                    switch (e.keyCode) {
-                        case 189:
-                            e.preventDefault();
-                            document.execCommand("decreaseFontSize", false);
-                            break;
-                        case 187:
-                            e.preventDefault();
-                            document.execCommand("increaseFontSize", false);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                switch (e.keyCode) {
-                    case 9:
-                        e.preventDefault();
-                        document.execCommand("indent", false);
-                        break;
-                    default:
-                        break;
-                }
-            });
-            setHasInitialized(true);
-        });
-    });
-    return (
-        <div className={styles._3ditor_main}>
-            {/* Header Buttons */}
-            <div className={styles._3ditor_header}>
-                <button
-                    type="button"
-                    className={styles._3ditor_button}
-                    data-action="bold"
-                    onClick={() => {
-                        document.execCommand("bold", false);
-                    }}
-                >
-                    <BsTypeBold size="20px" />
-                </button>
-                <button
-                    type="button"
-                    className={styles._3ditor_button}
-                    data-action="italic"
-                    onClick={() => {
-                        document.execCommand("italic", false);
-                    }}
-                >
-                    <BsTypeItalic size="20px" />
-                </button>
-                <button
-                    type="button"
-                    className={styles._3ditor_button}
-                    data-action="underline"
-                    onClick={() => {
-                        document.execCommand("underline", false);
-                    }}
-                >
-                    <BsTypeUnderline size="20px" />
-                </button>
-                <span className={styles._3ditor_header_divider} />
-                <button
-                    type="button"
-                    className={styles._3ditor_button}
-                    data-action="insertUnorderedList"
-                    onClick={() => {
-                        document.execCommand("insertUnorderedList", false);
-                    }}
-                >
-                    <AiOutlineUnorderedList />
-                </button>
-                <button
-                    type="button"
-                    className={styles._3ditor_button}
-                    data-action="insertOrderedList"
-                    onClick={() => {
-                        document.execCommand("insertOrderedList", false);
-                    }}
-                >
-                    <AiOutlineOrderedList />
-                </button>
-                <span className={styles._3ditor_header_divider} />
-                <button
-                    type="button"
-                    className={styles._3ditor_button}
-                    data-action="createLink"
-                    onClick={() => {
-                        let linkLocation = prompt(
-                            "Please enter the link's target.",
-                            "https://www.example.com/"
-                        );
-                        if (linkLocation)
-                            document.execCommand(
-                                "createLink",
-                                false,
-                                linkLocation
-                            );
-                        if (!linkLocation)
-                            document.getElementsByClassName(
-                                "_3ditor_content"
-                            )[0].innerHTML += "<div></div>";
-                    }}
-                >
-                    <FiLink2 />
-                </button>
-                <span className={styles._3ditor_header_divider} />
-                <button
-                    type="button"
-                    className={styles._3ditor_button}
-                    data-action="justifyLeft"
-                    onClick={() => {
-                        document.execCommand("justifyLeft", false);
-                    }}
-                >
-                    <AiOutlineAlignLeft />
-                </button>
-                <button
-                    type="button"
-                    className={styles._3ditor_button}
-                    data-action="justifyCenter"
-                    onClick={() => {
-                        document.execCommand("justifyCenter", false);
-                    }}
-                >
-                    <AiOutlineAlignCenter />
-                </button>
-                <button
-                    type="button"
-                    className={styles._3ditor_button}
-                    data-action="justifyRight"
-                    onClick={() => {
-                        document.execCommand("justifyRight", false);
-                    }}
-                >
-                    <AiOutlineAlignRight />
-                </button>
-                <button
-                    type="button"
-                    className={styles._3ditor_button}
-                    data-action="justifyFull"
-                    onClick={() => {
-                        document.execCommand("justifyFull", false);
-                    }}
-                >
-                    <BsJustify />
-                </button>
-                <span className={styles._3ditor_header_divider} />
-                <button
-                    type="button"
-                    className={styles._3ditor_size_control}
-                    data-action="decreaseFontSize"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const selection = document.getSelection();
-                        if(!selection || !selection.anchorNode?.parentElement) return;
-                        const sizeFull = getComputedStyle(selection.anchorNode?.parentElement, null).getPropertyValue("font-size");
-                        // /(\d*\.?\d*)(.+)/gms
-                        const regex = new RegExp("(\\d*\\.?\\d*)(.+)", "gms");
-                        const matched = regex.exec(sizeFull);
-                        if(!matched) return;
-                        const size = parseInt((parseFloat(matched[1]) - 1).toFixed(0));
-                        if(Math.sign(size) == -1) return;
-                        const unit = matched[2];
-                        const i_uuid = uuid.v4();
-                        const html = `<span style="font-size: ${size + unit};" id="${i_uuid}">${document.getSelection() ? document.getSelection()?.toString() : ""}</span>`;
-                        document.execCommand("insertHTML", false, html);
-                        const i_el = document.getElementById(i_uuid);
-                        if(!i_el) return;
-                        document.getSelection()?.selectAllChildren(i_el);
-                    }}
-                >
-                    <AiOutlineMinus />
-                </button>
-                <input type="number" name="fontSize" id="fontSize" defaultValue="11" className={styles._3ditor_size_input} onKeyUp={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if(e.keyCode != 13) return;
-                    const selection = selection_;
-                    // /(\d*\.?\d*)(.+)/gms
-                    const fontSize = document.getElementById("fontSize") as HTMLInputElement;
-                    if(!fontSize || !fontSize.value) return;
-                    fontSize.blur();
-                    const size = parseInt(fontSize.value);
-                    if(Math.sign(size) == -1) return;
-                    const unit = "px";
-                    const html = `<span style="font-size: ${size + unit};">${selection ? selection.toString() : ""}</span>`;
-                    document.execCommand("insertHTML", false, html);
-                }} onChange={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const selection = selection_;
-                    // /(\d*\.?\d*)(.+)/gms
-                    const fontSize = document.getElementById("fontSize") as HTMLInputElement;
-                    if(!fontSize || !fontSize.value) return;
-                    fontSize.blur();
-                    const size = parseInt(fontSize.value);
-                    if(Math.sign(size) == -1) return;
-                    const unit = "px";
-                    const html = `<span style="font-size: ${size + unit};">${selection ? selection.toString() : ""}</span>`;
-                    document.execCommand("insertHTML", false, html);
-                }} onFocus={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const sel = document.getSelection();
-                    if(!sel || sel.toString() == "" || sel.toString() == " ") return;
-                    setSelection_(sel);
-                }} onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }} />
-                <button
-                    type="button"
-                    className={styles._3ditor_size_control_last}
-                    data-action="increaseFontSize"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const selection = document.getSelection();
-                        if(!selection || !selection.anchorNode?.parentElement) return;
-                        const sizeFull = getComputedStyle(selection.anchorNode?.parentElement, null).getPropertyValue("font-size");
-                        const regex = new RegExp("(\\d*\\.?\\d*)(.+)", "gms");
-                        const matched = regex.exec(sizeFull);
-                        if(!matched) return;
-                        const size = parseInt((parseFloat(matched[1]) + 1).toFixed(0));
-                        if(Math.sign(size) == -1) return;
-                        const unit = matched[2];
-                        const i_uuid = uuid.v4();
-                        const html = `<span style="font-size: ${size + unit};" id="${i_uuid}">${document.getSelection() ? document.getSelection()?.toString() : ""}</span>`;
-                        console.log(html);
-                        document.execCommand("insertHTML", false, html);
-                        const i_el = document.getElementById(i_uuid);
-                        if(!i_el) return;
-                        document.getSelection()?.selectAllChildren(i_el);
-                    }}
-                >
-                    <AiOutlinePlus />
-                </button>
-                <span className={styles._3ditor_header_divider} />
-                <select id="_3ditor_font" className={styles._3ditor_font} onChange={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const sel = document.getElementById("_3ditor_font") as HTMLSelectElement;
-                    if(!sel) return;
-                    const font = sel.value;
-                    document.execCommand("fontName", false, font);
-                }}>
-                    <option value="Arial" style={{ fontFamily: "arial" }}>Arial</option>
-                    <option value="Helvetica" style={{ fontFamily: "helvetica" }}>Helvetica</option>
-                    { fonts.items.map((f) => {
-                        return (
-                            <option value={f.family} style={{ fontFamily: f.family }} key={f.family}>{f.family}</option>
-                        );
-                    }) }
-                </select>
-                <span className={styles._3ditor_header_divider} />
-                <button
-                    type="button"
-                    className={styles._3ditor_button}
-                    data-action="none"
-                    onClick={() => {
-                        let content = prompt(
-                            "Please enter the custom code to insert.",
-                            "<div>Hello, world!</div>"
-                        );
-                        if (content)
-                            document.getElementsByClassName(
-                                "_3ditor_content"
-                            )[0].innerHTML += content;
-                        if (!content)
-                            document.getElementsByClassName(
-                                "_3ditor_content"
-                            )[0].innerHTML += "<div></div>";
-                    }}
-                >
-                    <BsCodeSlash />
-                </button>
-                <button
-                    type="button"
-                    className={styles._3ditor_button}
-                    data-action="insertImage"
-                    onClick={() => {
-                        let imageLocation = prompt(
-                            "Please enter the image's URL.",
-                            "https://www.example.com/example.png"
-                        );
-                        if (imageLocation)
-                            document.execCommand(
-                                "insertImage",
-                                false,
-                                imageLocation
-                            );
-                        if (!imageLocation)
-                            document.getElementsByClassName(
-                                "_3ditor_content"
-                            )[0].innerHTML += "<div></div>";
-                    }}
-                >
-                    <BsImage />
-                </button>
-            </div>
-            <div className={styles._3ditor_content_container}>
-                <div
-                    className={styles._3ditor_content}
-                    contentEditable={true}
-                    id="_3ditor_content"
-                ></div>
-            </div>
-        </div>
-    );
-};
+}
 
 export default Editor;

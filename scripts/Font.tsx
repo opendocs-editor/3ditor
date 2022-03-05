@@ -7,11 +7,13 @@ const Font = class {
     ) {}
 
     public importCss(): string {
-        if(!this.importUrl) return "";
+        if (!this.importUrl) return "";
         return `
             @font-face {
                 font-family: "${this.cssName}";
-                src: @import url("${this.importUrl}") format("${this.importType || "TrueType"}");
+                src: @import url("${this.importUrl}") format("${
+            this.importType || "TrueType"
+        }");
             }
         `;
     }
@@ -25,8 +27,8 @@ const Font = class {
     }
 
     public getJSXSelectOption(): JSX.Element {
-        return (<option value={this.cssName}>{this.name}</option>);
+        return <option value={this.cssName}>{this.name}</option>;
     }
-}
+};
 
 export default Font;

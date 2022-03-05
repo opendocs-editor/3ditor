@@ -9,18 +9,22 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "3ditor@workspace:."
   dependencies:
+    "@tinymce/tinymce-react": ^3.13.1
     "@types/node": ^17.0.13
     "@types/react": 17.0.38
     "@types/uuid": ^8.3.4
     dotenv: ^16.0.0
     eslint: 8.8.0
     eslint-config-next: 12.0.9
+    google-tts-api: ^2.0.2
     next: 12.0.9
     opendocs-fonts-api: ^1.2.0
+    play-audio-url: ^1.0.1
     prettier: ^2.5.1
     react: 17.0.2
     react-dom: 17.0.2
     react-icons: ^4.3.1
+    speak-tts: ^2.0.8
     typescript: 4.5.5
     uuid: ^8.3.2
   languageName: unknown
@@ -204,6 +208,19 @@ __metadata:
   version: 1.1.0
   resolution: "@rushstack/eslint-patch@npm:1.1.0"
   checksum: 4602c23454c8bb03502da12398cb5c4c0bfb3b1772535b418ec94ab8c47824f70e6ff32206a35fe7086042d9516959edea439e2371147b1de7eee50ef03ace65
+  languageName: node
+  linkType: hard
+
+"@tinymce/tinymce-react@npm:^3.13.1":
+  version: 3.13.1
+  resolution: "@tinymce/tinymce-react@npm:3.13.1"
+  dependencies:
+    prop-types: ^15.6.2
+    tinymce: ^5.5.1
+  peerDependencies:
+    react: ^17.0.1 || ^16.7.0
+    react-dom: ^17.0.1 || ^16.7.0
+  checksum: dea1525c634a8760a83503adae3f7424120ff9790d5f1dbca00680fe54eb1585983d11dfd32e8a86f656b344e770e233f541b6e1542606d92cd31730c3683167
   languageName: node
   linkType: hard
 
@@ -427,10 +444,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"async-waterfall@npm:^0.1.5":
+  version: 0.1.5
+  resolution: "async-waterfall@npm:0.1.5"
+  checksum: 3f205e7e20fea348f82807cd7b30d69ada107ccc0a0abc24bc88d99e152887f02d50cc811caf0e603fdf5167389867ed09e3196eb725c4ee898c60f9879d7562
+  languageName: node
+  linkType: hard
+
+"audio-context-singleton@npm:^1.0.2":
+  version: 1.2.4
+  resolution: "audio-context-singleton@npm:1.2.4"
+  checksum: 4e686a76614d8f1e5877cebcae60bdfcd7f71bca13cf7e3b9f7f6ec50690adad0b87d490e9bdb8ccdec0b5b5e6ccdd8fa42a667951efb57437b23be87cf97615
+  languageName: node
+  linkType: hard
+
 "axe-core@npm:^4.3.5":
   version: 4.4.0
   resolution: "axe-core@npm:4.4.0"
   checksum: 6c876b8176a1f0551efe251e0f9627eea7bbd02d4fe8fbd0561fdce9c6383c73cc27397dd90c562106c05dc35baf78daf39f871a3f55fbb9f64c417c0c7445da
+  languageName: node
+  linkType: hard
+
+"axios@npm:^0.21.0":
+  version: 0.21.4
+  resolution: "axios@npm:0.21.4"
+  dependencies:
+    follow-redirects: ^1.14.0
+  checksum: 44245f24ac971e7458f3120c92f9d66d1fc695e8b97019139de5b0cc65d9b8104647db01e5f46917728edfc0cfd88eb30fc4c55e6053eef4ace76768ce95ff3c
   languageName: node
   linkType: hard
 
@@ -454,6 +494,13 @@ __metadata:
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
   checksum: 9706c088a283058a8a99e0bf91b0a2f75497f185980d9ffa8b304de1d9e58ebda7c72c07ebf01dadedaac5b2907b2c6f566f660d62bd336c3468e960403b9d65
+  languageName: node
+  linkType: hard
+
+"basic-browser-request@npm:^9.0.1":
+  version: 9.0.2
+  resolution: "basic-browser-request@npm:9.0.2"
+  checksum: add76c6c2e8665427dd62135025e31901f9db38cd56a61b644e29185fb97d1b6f00784230ad23bec8ab76e18103cb9a442e19f28fbbfd4f301c7e87907832437
   languageName: node
   linkType: hard
 
@@ -486,6 +533,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"call-next-tick@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "call-next-tick@npm:2.0.1"
+  checksum: 91ebadeaf68f48a984c98e4fc9f3ad145aee9f47d32849901985220d394c3b4e0175623c1a0c4960b3245480403d85011fcb3348aad672b1ab6871c9ab9f1433
+  languageName: node
+  linkType: hard
+
 "callsites@npm:^3.0.0":
   version: 3.1.0
   resolution: "callsites@npm:3.1.0"
@@ -507,6 +561,15 @@ __metadata:
     ansi-styles: ^4.1.0
     supports-color: ^7.1.0
   checksum: fe75c9d5c76a7a98d45495b91b2172fa3b7a09e0cc9370e5c8feb1c567b85c4288e2b3fded7cfdd7359ac28d6b3844feb8b82b8686842e93d23c827c417e83fc
+  languageName: node
+  linkType: hard
+
+"collect-in-channel@npm:^3.0.1":
+  version: 3.1.0
+  resolution: "collect-in-channel@npm:3.1.0"
+  dependencies:
+    get-at-path: ^1.0.1
+  checksum: c8d8f0af59debcb3c5d1d1da5217e52a74f66cfd9ac3422014104cfc7cf4f62ac054ffbf2252a5b05e6baa5b13533cf8ae967af4fd7395bc888ddf88a86526eb
   languageName: node
   linkType: hard
 
@@ -1046,7 +1109,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.8":
+"follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.8":
   version: 1.14.9
   resolution: "follow-redirects@npm:1.14.9"
   peerDependenciesMeta:
@@ -1081,6 +1144,13 @@ __metadata:
   version: 1.0.1
   resolution: "functional-red-black-tree@npm:1.0.1"
   checksum: ca6c170f37640e2d94297da8bb4bf27a1d12bea3e00e6a3e007fd7aa32e37e000f5772acf941b4e4f3cf1c95c3752033d0c509af157ad8f526e7f00723b9eb9f
+  languageName: node
+  linkType: hard
+
+"get-at-path@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "get-at-path@npm:1.0.1"
+  checksum: 9079fa0739df91b9bb85918c29d395d5402ee03ef3a40eb00a7c3b66e15404fa864df9b29cc3d5a6e0eb49a597dbd0973f6dd184ac7a47d2697e59b20453c374
   languageName: node
   linkType: hard
 
@@ -1171,6 +1241,15 @@ __metadata:
     merge2: ^1.4.1
     slash: ^3.0.0
   checksum: b4be8885e0cfa018fc783792942d53926c35c50b3aefd3fdcfb9d22c627639dc26bd2327a40a0b74b074100ce95bb7187bfeae2f236856aa3de183af7a02aea6
+  languageName: node
+  linkType: hard
+
+"google-tts-api@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "google-tts-api@npm:2.0.2"
+  dependencies:
+    axios: ^0.21.0
+  checksum: cc2d46c671ce816d81b3c378633e8371a850cffaf4f88243b412bb4b9b847f22c59c559bc2508e4739b16c2cc709f33e93cdf8747ee5b28cf08965e1b3e63536
   languageName: node
   linkType: hard
 
@@ -1499,6 +1578,13 @@ __metadata:
     p-locate: ^2.0.0
     path-exists: ^3.0.0
   checksum: 02d581edbbbb0fa292e28d96b7de36b5b62c2fa8b5a7e82638ebb33afa74284acf022d3b1e9ae10e3ffb7658fbc49163fcd5e76e7d1baaa7801c3e05a81da755
+  languageName: node
+  linkType: hard
+
+"lodash.curry@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "lodash.curry@npm:4.1.1"
+  checksum: 9192b70fe7df4d1ff780c0260bee271afa9168c93fe4fa24bc861900240531b59781b5fdaadf4644fea8f4fbcd96f0700539ab294b579ffc1022c6c15dcc462a
   languageName: node
   linkType: hard
 
@@ -1854,6 +1940,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"play-audio-url@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "play-audio-url@npm:1.0.1"
+  dependencies:
+    async-waterfall: ^0.1.5
+    audio-context-singleton: ^1.0.2
+    basic-browser-request: ^9.0.1
+    call-next-tick: ^2.0.1
+    collect-in-channel: ^3.0.1
+    lodash.curry: ^4.1.1
+    request-body-mover: ^1.0.1
+  checksum: 889f78ce23d5c0c4b4942b1ebd248f5e75650e00f3d0705c067ab6465366fdd695a01f19178624ded65dccfd59a8f2b29ed4f5d5f66f200cff2bad641574b285
+  languageName: node
+  linkType: hard
+
 "postcss@npm:8.4.5":
   version: 8.4.5
   resolution: "postcss@npm:8.4.5"
@@ -1881,7 +1982,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.7.2":
+"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -1966,6 +2067,13 @@ __metadata:
   version: 3.2.0
   resolution: "regexpp@npm:3.2.0"
   checksum: a78dc5c7158ad9ddcfe01aa9144f46e192ddbfa7b263895a70a5c6c73edd9ce85faf7c0430e59ac38839e1734e275b9c3de5c57ee3ab6edc0e0b1bdebefccef8
+  languageName: node
+  linkType: hard
+
+"request-body-mover@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "request-body-mover@npm:1.0.1"
+  checksum: 7831643caab398b457b84faf1d99785abab9e8d554c6837f60f64ee5107e399a3772d06e02c2fc8f513a1deaa77d75ac22aa11a04a177677c24b144c4bb03043
   languageName: node
   linkType: hard
 
@@ -2120,6 +2228,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"speak-tts@npm:^2.0.8":
+  version: 2.0.8
+  resolution: "speak-tts@npm:2.0.8"
+  checksum: d0cba5ff6ef9c0e980a00b1e3de7d27cb9072f8ba66f3ac2b292db1dc093e7a8b95d994a279ce189642ba7326e508ee58650ca9326d909d66b0b8d8f8aef677b
+  languageName: node
+  linkType: hard
+
 "string.prototype.matchall@npm:^4.0.6":
   version: 4.0.6
   resolution: "string.prototype.matchall@npm:4.0.6"
@@ -2213,6 +2328,13 @@ __metadata:
   version: 0.2.0
   resolution: "text-table@npm:0.2.0"
   checksum: b6937a38c80c7f84d9c11dd75e49d5c44f71d95e810a3250bd1f1797fc7117c57698204adf676b71497acc205d769d65c16ae8fa10afad832ae1322630aef10a
+  languageName: node
+  linkType: hard
+
+"tinymce@npm:^5.5.1":
+  version: 5.10.3
+  resolution: "tinymce@npm:5.10.3"
+  checksum: cdccabec38545a5807f8e06faf828616d37fd958fd571244256937342e880c51711ba13bdb1a95aae89c9ea70014806c8cf70b125abfad6dd488380e4bc53f27
   languageName: node
   linkType: hard
 

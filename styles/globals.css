@@ -35,3 +35,99 @@ body {
     background-color: rgba(100, 100, 100);
     cursor: pointer;
 }
+
+/* ----------------------------- OpenDyslexic 3 ----------------------------- */
+
+@font-face {
+    font-family: "OpenDyslexic Three";
+    src: url("../public/fonts/OpenDyslexic3-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Three";
+    src: url("../public/fonts/OpenDyslexic3-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* ----------------------------- OpenDyslexic 2 ----------------------------- */
+
+@font-face {
+    font-family: "OpenDyslexic Two";
+    src: url("../public/fonts/OpenDyslexic-Regular.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Two";
+    src: url("../public/fonts/OpenDyslexic-Bold.otf") format("opentype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Two";
+    src: url("../public/fonts/OpenDyslexic-BoldItalic.otf") format("opentype");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Two";
+    src: url("../public/fonts/OpenDyslexic-Italic.otf") format("opentype");
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* ----------------------------- OpenDyslexic Alta ----------------------------- */
+
+@font-face {
+    font-family: "OpenDyslexic Alta";
+    src: url("../public/fonts/OpenDyslexicAlta-Regular.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Alta";
+    src: url("../public/fonts/OpenDyslexicAlta-Bold.otf") format("opentype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Alta";
+    src: url("../public/fonts/OpenDyslexicAlta-BoldItalic.otf")
+        format("opentype");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Alta";
+    src: url("../public/fonts/OpenDyslexicAlta-Italic.otf") format("opentype");
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* ----------------------------- OpenDyslexic Mono ----------------------------- */
+
+@font-face {
+    font-family: "OpenDyslexic Mono";
+    src: url("../public/fonts/OpenDyslexicMono-Regular.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* ----------------------------- Dyslexia Mode ----------------------------- */
+
+.tox {
+    font-family: "OpenDyslexic Two" !important;
+}
+
+.tox > * {
+    font-family: "OpenDyslexic Two" !important;
+}

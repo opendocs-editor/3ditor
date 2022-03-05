@@ -1,0 +1,103 @@
+/* ----------------------------- OpenDyslexic 3 ----------------------------- */
+
+@font-face {
+    font-family: "OpenDyslexic Three";
+    src: url("./OpenDyslexic3-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Three";
+    src: url("./OpenDyslexic3-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* ----------------------------- OpenDyslexic 2 ----------------------------- */
+
+@font-face {
+    font-family: "OpenDyslexic Two";
+    src: url("./OpenDyslexic-Regular.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Two";
+    src: url("./OpenDyslexic-Bold.otf") format("opentype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Two";
+    src: url("./OpenDyslexic-BoldItalic.otf") format("opentype");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Two";
+    src: url("./OpenDyslexic-Italic.otf") format("opentype");
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* ----------------------------- OpenDyslexic Alta ----------------------------- */
+
+@font-face {
+    font-family: "OpenDyslexic Alta";
+    src: url("./OpenDyslexicAlta-Regular.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Alta";
+    src: url("./OpenDyslexicAlta-Bold.otf") format("opentype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Alta";
+    src: url("./OpenDyslexicAlta-BoldItalic.otf") format("opentype");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "OpenDyslexic Alta";
+    src: url("./OpenDyslexicAlta-Italic.otf") format("opentype");
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* ----------------------------- OpenDyslexic Mono ----------------------------- */
+
+@font-face {
+    font-family: "OpenDyslexic Mono";
+    src: url("./OpenDyslexicMono-Regular.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* ----------------------------- Dyslexia Mode ----------------------------- */
+
+body {
+    font-family: "OpenDyslexic Two";
+}
+
+body > * {
+    font-family: "OpenDyslexic Two";
+    transition: background-color 0.5s ease;
+}
+
+/* ----------------------------- Speaking ----------------------------- */
+
+.speaking {
+    background-color: rgb(250, 216, 26) !important;
+    padding: 2px 8px;
+    border-radius: 8px;
+}
