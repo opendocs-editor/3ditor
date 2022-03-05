@@ -179,7 +179,7 @@ class Editor extends React.Component {
                         });
                     },
                 }}
-                tinymceScriptSrc={`/tinymce/js/tinymce/tinymce.min.js`}
+                tinymceScriptSrc={`./tinymce/js/tinymce/tinymce.min.js`}
             />
         );
     }
