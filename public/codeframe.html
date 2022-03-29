@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>3ditor Embedded Code Editor</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <style>
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                width: 100%;
+                padding: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="_3ditor_code_editor" style="height: 100%; width: 100%"></div>
+        <script src="/monaco/min/vs/loader.js"></script>
+        <script>
+            require.config({ paths: { vs: "/monaco/min/vs" } });
+
+            const content = window.location.search.replace("?content=", "");
+
+            require(["vs/editor/editor.main"], function () {
+                var editor = monaco.editor.create(
+                    document.getElementById("_3ditor_code_editor"),
+                    {
+                        value: `${atob(content)}`,
+                        language: "html",
+                        theme: "vs-dark",
+                    }
+                );
+            });
+        </script>
+    </body>
+</html>

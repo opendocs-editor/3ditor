@@ -10,3 +10,6 @@ out
 .pnp.loader.mjs
 .yarn
 .next
+public/tinymce
+public/monaco
+public/*.js
