@@ -10,7 +10,7 @@ import { Theme } from "../../../../utils/types";
 export const getServerSideProps: GetServerSideProps = async (context) => {
     let document = "";
     const r_ = await axios.get(
-        `${window.location.protocol}//${window.location.host}/api/v1/editor/document/${context.query.docid}`
+        `${context.req.headers.referer || ""}/api/v1/editor/document/${context.query.docid}`
     );
     const resp = r_.data;
     if (resp.content) document = resp.content;
@@ -45,13 +45,12 @@ const Edit = ({
                 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
                 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
                 <link rel="manifest" href="/manifest.json" />
-                <link rel="stylesheet" href="/custom.css" />
             </Head>
 
             <div
                 className={styles.app}
                 style={{
-                    width: "100%;",
+                    width: "100%",
                     height: "100%",
                     margin: 0,
                     padding: 0,
@@ -60,7 +59,7 @@ const Edit = ({
                 <GrammarlyEditorPlugin
                     config={{ collectUserFeedback: true }}
                     style={{
-                        width: "100%;",
+                        width: "100%",
                         height: "100%",
                         margin: 0,
                         padding: 0,
