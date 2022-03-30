@@ -19,22 +19,24 @@ const Editor = ({
     documentId,
     theme_,
     setTheme_,
-    readOnly
+    readOnly,
 }: {
     documentContent?: string;
     documentId?: string;
     theme_?: Theme;
     setTheme_?: Dispatch<SetStateAction<Theme>>;
-    readOnly?: boolean
+    readOnly?: boolean;
 }) => {
     socket.on("complete_auth", async () => {
         console.log(await getNewToken());
     });
 
     const handleFormSubmit = () => {
-        if(readOnly) return;
+        if (readOnly) return;
         console.log("Submitting...");
-        const url = `/api/v1/editor/save${documentId ? "over" : ""}`;
+        const url = `${window.location.protocol}//${
+            window.location.host
+        }/api/v1/editor/save${documentId ? "over" : ""}`;
         const docid =
             (document.getElementById("_3ditor_doc_id") as HTMLInputElement)
                 ?.value || "";
@@ -46,7 +48,7 @@ const Editor = ({
             .then((d) => {
                 if (window.location.pathname == "/") {
                     window.location.replace(
-                        `/document/d/${d.data.documentId}/edit`
+                        `${window.location.protocol}//${window.location.host}/document/d/${d.data.documentId}/edit`
                     );
                 }
             });
@@ -198,18 +200,21 @@ const Editor = ({
                                     },
                                     help: { title: "Help", items: "help" },
                                 },
-                                menubar: readOnly ? false : 
-                                    "file edit view insert format tools tts table help | saving",
+                                menubar: readOnly
+                                    ? false
+                                    : "file edit view insert format tools tts table help | saving",
                                 plugins: [
                                     "print preview paste importcss searchreplace autolink autosave save directionality code",
                                     "visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak",
                                     "nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help",
                                     "charmap quickbars emoticons spellchecker opendocs-editor",
                                 ],
-                                contextmenu: readOnly ? false : 
-                                    "link linkchecker | image imagetools | lists configurepermanentpen | table | spellchecker addtodictionary",
-                                toolbar: readOnly ? false : 
-                                    "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect \
+                                contextmenu: readOnly
+                                    ? false
+                                    : "link linkchecker | image imagetools | lists configurepermanentpen | table | spellchecker addtodictionary",
+                                toolbar: readOnly
+                                    ? false
+                                    : "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect \
                     | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor \
                     backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile \
                     image media template link anchor codesample | ltr rtl rtc",
@@ -224,8 +229,7 @@ const Editor = ({
                     OpenDyslexic 3=OpenDyslexic Three; OpenDyslexic Alta=OpenDyslexic Alta; OpenDyslexic Mono=OpenDyslexic Mono;",
                                 branding: false,
                                 id: "_3ditor_tinymce",
-                                spellchecker_rpc_url:
-                                    "/api/v1/editor/spellchecker/check",
+                                spellchecker_rpc_url: `${window.location.protocol}//${window.location.host}/api/v1/editor/spellchecker/check`,
                                 images_upload_handler: (
                                     blob,
                                     success,
@@ -239,7 +243,7 @@ const Editor = ({
                                     xhr.withCredentials = false;
                                     xhr.open(
                                         "POST",
-                                        "/api/v1/editor/image/upload"
+                                        `${window.location.protocol}//${window.location.host}/api/v1/editor/image/upload`
                                     );
 
                                     xhr.upload.onprogress = function (e) {
@@ -448,7 +452,7 @@ const Editor = ({
                                             icon: "bookmark",
                                             onAction: async () => {
                                                 await axios.post(
-                                                    "/api/v1/editor/spellchecker/check",
+                                                    `${window.location.protocol}//${window.location.host}/api/v1/editor/spellchecker/check`,
                                                     {
                                                         method: "addtodictionary",
                                                         lang: "en",
@@ -476,7 +480,13 @@ const Editor = ({
                                                                 document.createElement(
                                                                     "a"
                                                                 );
-                                                            a.href = `/api/v1/editor/export/word?content=${encodeURIComponent(
+                                                            a.href = `${
+                                                                window.location
+                                                                    .protocol
+                                                            }//${
+                                                                window.location
+                                                                    .host
+                                                            }/api/v1/editor/export/word?content=${encodeURIComponent(
                                                                 btoa(
                                                                     editor.getContent()
                                                                 )
@@ -856,7 +866,7 @@ const Editor = ({
                                     );
                                 },
                             }}
-                            tinymceScriptSrc={`/tinymce/js/tinymce/tinymce.min.js`}
+                            tinymceScriptSrc={`${window.location.protocol}//${window.location.host}/tinymce/js/tinymce/tinymce.min.js`}
                         />
                     </form>
                     <GrammarlyButton className="grammarlyButton" />

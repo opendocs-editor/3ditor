@@ -10,7 +10,7 @@ import { Theme } from "../../../../utils/types";
 export const getServerSideProps: GetServerSideProps = async (context) => {
     let document = "";
     const r_ = await axios.get(
-        `/api/v1/editor/document/${context.query.docid}`
+        `${window.location.protocol}//${window.location.host}/api/v1/editor/document/${context.query.docid}`
     );
     const resp = r_.data;
     if (resp.content) document = resp.content;
