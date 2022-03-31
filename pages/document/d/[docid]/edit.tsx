@@ -6,7 +6,11 @@ import Editor from "../../../../components/Editor";
 import styles from "../../../../styles/Home.module.css";
 import { Theme } from "../../../../utils/types";
 import { useRouter } from "next/router";
-import { DarkEditorMode, GlobalEditorStyles, LightEditorMode } from "styles/3ditor";
+import {
+    DarkEditorMode,
+    GlobalEditorStyles,
+    LightEditorMode,
+} from "styles/3ditor";
 import { DarkMode, LightMode } from "styles/theme";
 
 const parseSearch = (query: string): { [key: string]: string } => {
@@ -37,18 +41,21 @@ const Edit = ({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => {
-        axios.get(
-            `${window.location.protocol}//${window.location.host}/api/v1/editor/document/${router.query.docid}`
-        ).then((resp) => {
-            setDocument(resp.data.content);
-            setIsLoading(false);
-        }).catch((e) => {
-            alert(`An error occured while loading the document: ${e}`);
-        });
+        axios
+            .get(
+                `${window.location.protocol}//${window.location.hostname}/api/v1/editor/document/${router.query.docid}`
+            )
+            .then((resp) => {
+                setDocument(resp.data.content);
+                setIsLoading(false);
+            })
+            .catch((e) => {
+                alert(`An error occured while loading the document: ${e}`);
+            });
         const t = window.localStorage.getItem("theme");
         if (t) {
             setTheme(t as Theme);
-            if(setTheme_) setTheme_(t as Theme);
+            if (setTheme_) setTheme_(t as Theme);
         }
     });
 
@@ -78,19 +85,17 @@ const Edit = ({
                 }}
             >
                 <GlobalEditorStyles />
-                {
-                    (theme == "dark" || theme == "dark-dyslexic") ? (
-                        <>
-                            <DarkEditorMode />
-                            <DarkMode />
-                        </>
-                    ) : (
-                        <>
-                            <LightEditorMode />
-                            <LightMode />
-                        </>
-                    )
-                }
+                {theme == "dark" || theme == "dark-dyslexic" ? (
+                    <>
+                        <DarkEditorMode />
+                        <DarkMode />
+                    </>
+                ) : (
+                    <>
+                        <LightEditorMode />
+                        <LightMode />
+                    </>
+                )}
                 <GrammarlyEditorPlugin
                     config={{ collectUserFeedback: true }}
                     style={{

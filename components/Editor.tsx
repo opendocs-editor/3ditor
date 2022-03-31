@@ -35,7 +35,7 @@ const Editor = ({
         if (readOnly) return;
         console.log("Submitting...");
         const url = `${window.location.protocol}//${
-            window.location.host
+            window.location.hostname
         }/api/v1/editor/save${documentId ? "over" : ""}`;
         const docid =
             (document.getElementById("_3ditor_doc_id") as HTMLInputElement)
@@ -48,10 +48,13 @@ const Editor = ({
             .then((d) => {
                 if (window.location.pathname == "/") {
                     window.location.replace(
-                        `${window.location.protocol}//${window.location.host}/document/d/${d.data.documentId}/edit`
+                        `${window.location.protocol}//${window.location.hostname}/document/d/${d.data.documentId}/edit`
                     );
                 }
-            }).catch(() => { alert("Unable to dave document.") });
+            })
+            .catch(() => {
+                alert("Unable to dave document.");
+            });
     };
 
     const [playing, setPlaying] = React.useState(false);
@@ -231,7 +234,7 @@ const Editor = ({
                     OpenDyslexic 3=OpenDyslexic Three; OpenDyslexic Alta=OpenDyslexic Alta; OpenDyslexic Mono=OpenDyslexic Mono;",
                                 branding: false,
                                 id: "_3ditor_tinymce",
-                                spellchecker_rpc_url: `${window.location.protocol}//${window.location.host}/api/v1/editor/spellchecker/check`,
+                                spellchecker_rpc_url: `${window.location.protocol}//${window.location.hostname}/api/v1/editor/spellchecker/check`,
                                 images_upload_handler: (
                                     blob,
                                     success,
@@ -245,7 +248,7 @@ const Editor = ({
                                     xhr.withCredentials = false;
                                     xhr.open(
                                         "POST",
-                                        `${window.location.protocol}//${window.location.host}/api/v1/editor/image/upload`
+                                        `${window.location.protocol}//${window.location.hostname}/api/v1/editor/image/upload`
                                     );
 
                                     xhr.upload.onprogress = function (e) {
@@ -454,7 +457,7 @@ const Editor = ({
                                             icon: "bookmark",
                                             onAction: async () => {
                                                 await axios.post(
-                                                    `${window.location.protocol}//${window.location.host}/api/v1/editor/spellchecker/check`,
+                                                    `${window.location.protocol}//${window.location.hostname}/api/v1/editor/spellchecker/check`,
                                                     {
                                                         method: "addtodictionary",
                                                         lang: "en",
@@ -878,7 +881,7 @@ const Editor = ({
                                     );
                                 },
                             }}
-                            tinymceScriptSrc={`${window.location.protocol}//${window.location.host}/tinymce/js/tinymce/tinymce.min.js`}
+                            tinymceScriptSrc={`${window.location.protocol}//${window.location.hostname}/tinymce/js/tinymce/tinymce.min.js`}
                         />
                     </form>
                     <GrammarlyButton className="grammarlyButton" />

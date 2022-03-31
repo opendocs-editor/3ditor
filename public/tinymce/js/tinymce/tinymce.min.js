@@ -23476,7 +23476,7 @@
         };
         var s = (function (e, t) {
             if (
-                document.domain !== window.location.hostname &&
+                document.domain !== window.location.hostnamename &&
                 xt.browser.isIE()
             ) {
                 var n = jv("mce");
