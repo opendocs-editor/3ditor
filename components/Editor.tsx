@@ -51,7 +51,7 @@ const Editor = ({
                         `${window.location.protocol}//${window.location.host}/document/d/${d.data.documentId}/edit`
                     );
                 }
-            });
+            }).catch(() => { alert("Unable to dave document.") });
     };
 
     const [playing, setPlaying] = React.useState(false);
@@ -59,9 +59,11 @@ const Editor = ({
     const [readyToLoad, setReadyToLoad] = React.useState(false);
     const [theme, setTheme] = React.useState<Theme>(theme_ || "light");
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => {
         const t = window.localStorage.getItem("theme");
         if (t) setTheme(t as Theme);
+        if (setTheme_) setTheme_(t as Theme);
     });
 
     interface SelectBoxItemSpec {
@@ -824,6 +826,11 @@ const Editor = ({
                                                                 (sel.toString() as Theme) ||
                                                                     theme
                                                             );
+                                                        if (setTheme_)
+                                                            setTheme_(
+                                                                (sel.toString() as Theme) ||
+                                                                    theme
+                                                            );
                                                         window.localStorage.setItem(
                                                             "theme",
                                                             (sel.toString() as Theme) ||
@@ -848,6 +855,11 @@ const Editor = ({
                                                         const sel = data.theme;
                                                         if (setTheme)
                                                             setTheme(
+                                                                (sel.toString() as Theme) ||
+                                                                    theme
+                                                            );
+                                                        if (setTheme_)
+                                                            setTheme_(
                                                                 (sel.toString() as Theme) ||
                                                                     theme
                                                             );
