@@ -12,6 +12,7 @@
     "author": "Jacob Sapoznikow <jacob1coder@gmail.com>",
     "license": "MIT",
     "main": "build/exports.js",
+    "types": "build/exports.d.ts",
     "scripts": {
         "dev": "PORT=8087 next dev",
         "build": "next build",

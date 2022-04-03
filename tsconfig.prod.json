@@ -15,7 +15,9 @@
         "jsx": "preserve",
         "incremental": true,
         "baseUrl": ".",
-        "outDir": "build"
+        "outDir": "build",
+        "sourceMap": true,
+        "declaration": true
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
     "exclude": ["node_modules"]
