@@ -1,20 +1,25 @@
 {
-    "name": "3ditor",
-    "version": "1.0.0",
+    "name": "@opendocs-editor/3ditor",
+    "version": "1.4.1",
     "description": "3ditor: The open-source multiplatform React-based editor that powers OpenDocs.",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/opendocs-editor/3ditor.git"
     },
+    "publishConfig": {
+        "access": "public"
+    },
     "author": "Jacob Sapoznikow <jacob1coder@gmail.com>",
     "license": "MIT",
+    "main": "build/exports.js",
     "scripts": {
-        "dev": "PORT=8086 next dev",
+        "dev": "PORT=8087 next dev",
         "build": "next build",
-        "start": "PORT=8086 next start",
+        "start": "PORT=8087 next start",
         "lint": "next lint",
         "format": "prettier --write .",
-        "build:prod": "next build && next export"
+        "build:prod": "next build && next export",
+        "build:pkg": "tsc -p ./tsconfig.prod.json"
     },
     "dependencies": {
         "@grammarly/editor-sdk-react": "^1.6.0",

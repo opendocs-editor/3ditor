@@ -20,19 +20,21 @@ const Editor = ({
     theme_,
     setTheme_,
     readOnly,
+    submitAllowed,
 }: {
     documentContent?: string;
     documentId?: string;
     theme_?: Theme;
     setTheme_?: Dispatch<SetStateAction<Theme>>;
     readOnly?: boolean;
+    submitAllowed?: boolean;
 }) => {
     socket.on("complete_auth", async () => {
         console.log(await getNewToken());
     });
 
     const handleFormSubmit = () => {
-        if (readOnly) return;
+        if (!submitAllowed || readOnly) return;
         console.log("Submitting...");
         const url = `${window.location.protocol}//${
             window.location.hostname

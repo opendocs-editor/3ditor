@@ -15,7 +15,7 @@ const Home = ({
     return (
         <div
             className={styles.container}
-            style={{ width: "100%;", height: "100%", margin: 0, padding: 0 }}
+            style={{ width: "100%", height: "100%", margin: 0, padding: 0 }}
         >
             <Head>
                 <title>3ditor Demo</title>
@@ -31,7 +31,7 @@ const Home = ({
             <div
                 className={styles.app}
                 style={{
-                    width: "100%;",
+                    width: "100%",
                     height: "100%",
                     margin: 0,
                     padding: 0,
@@ -40,7 +40,7 @@ const Home = ({
                 <GrammarlyEditorPlugin
                     config={{ collectUserFeedback: true }}
                     style={{
-                        width: "100%;",
+                        width: "100%",
                         height: "100%",
                         margin: 0,
                         padding: 0,
