@@ -46,7 +46,7 @@ jobs:
             - name: Publish
               run: |
                   npm install
-                  npm build:pkg
+                  npm run build:pkg
                   npm publish
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
