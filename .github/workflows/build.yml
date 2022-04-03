@@ -42,16 +42,9 @@ jobs:
               with:
                   node-version: 16.x
                   registry-url: "https://registry.npmjs.org/"
-            - name: Install dependencies and build.
-              run: |
-                  yarn install
-                  yarn format
-                  yarn lint
-                  yarn build
-                  yarn build:pkg
             - name: Publish
               run: |
-                  npm ci
+                  npm install
                   npm build:pkg
                   npm publish
               env:
